@@ -2,7 +2,7 @@
 #Alumno: Joaquin Felipe Diaz
 
 #Proyecto Parte 1:
-![Tinkercad](./esquemas/esquema-parcial-parte1.png)
+![Tinkercad](esquemas/esquema-parcial-parte1.png)
 #Funcion del proyecto:
 El proyecto muestra en dos displays de 7 segmentos que estan multiplexados, un contador de 00 a 99. El contador se va modificando a traves de un boton de suma, otro
 de resta y uno de rerseteo.
