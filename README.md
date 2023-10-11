@@ -130,7 +130,10 @@ void printDigit(int digit){
 https://www.tinkercad.com/things/keQHU63HTtI-ejercicio-parcial-parte-1-joaquin-felipe-diaz-1b/editel?sharecode=aj32nEVRsZ7xWgFOk9Aydu_KI2w31uWBayBlaLfo2KQ
 
 #Proyecto Parte 2
-(./esquemas/esquema parcial parte2.png)
+
+![Tinkercad](esquemas/esquema-parcial-parte2.png)
+
+
 #Funcion del proyecto
 El proyecto contiene dos contadores, uno de 00 a 99 y otro de numeros primos entre el 00 y 99. Estos son activados a traves de un interruptor deslizante. Luego tambien contiene un medidor de temperatura y un motor. El motor dependiendo de si sube o baja el contador gira para adelante o hacia atras, si el sensor de temperatura supera los 100 grados el motor se apaga o si se presiona el boton de reset.
 
