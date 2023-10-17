@@ -169,7 +169,8 @@ digitalWrite(A2,0);
  Si el boton deslizante esta en estado = 0 se activa el contador de 00 a 99.  Si el boton deslizante esta en estado = 1 se activa el contador de numeros primos.
 Utilizamos (int botonDeslizante = digitalRead(Deslizador);) para poder leer el boton tipo switch y almacenarle un estado de tipo entero.
 ~~~ C
-if(botonDeslizante== 0){
+///CONTADOR 00 A 99.
+  if(botonDeslizante== 0){
   int pressed = keypressed();
   if (pressed==SUBE){
     motor_hacia_adelante();
@@ -191,42 +192,39 @@ if(botonDeslizante== 0){
   
   //CONTADOR NUMEROS PRIMOS HASTA 99.
  if(botonDeslizante == 1){
-  int pressed = keypressed();
+   int pressed = keypressed();
   if (pressed==SUBE){
     countDigit++;
-  for (i;i<=99;i++){ 
-      if(countDigit % i ==0){
-        contador_divisibles++;
-      }
-  }  
-   if (contador_divisibles<2){
-   	  printCount(countDigit);
-      }
+    motor_hacia_adelante();     
     if (countDigit >99)
       countDigit =0;   
-  }
-   else if(pressed ==BAJA){
-    countDigit--;
-  for (i;i<=99;i++){
-      if(countDigit % i ==0){
-        contador_divisibles++;
-        
-      }
-  }  
-   if (contador_divisibles<2){
-     printCount(countDigit);
-     
-   }
+  }else if(pressed ==BAJA){//Si se presiona el boton de bajar:
+  countDigit--;//El digito se le resta 1 al presionar el boton.
+  motor_hacia_atras();
     if (countDigit <0)
       countDigit =99;
   }
-   
   else if(pressed == RESET){
-  countDigit = 0;
+    apagar_motor();//Apaga el motor y restablece el display a 0. 
   }
-   
-  Serial.println(countDigit);
-}
+  for (i = 1; i <= 99; i++)
+    if (countDigit % i == 0 &&  countDigit >=2){//comparamos el valor de display con todos los numeros del 00 al 99
+    contador_divisibles= contador_divisibles + 1;
+    if(contador_divisibles == 2){// si se divide solo por 1 y por si mismo
+      print_primo = true;// es primo          
+  }
+    else{
+    print_primo = false;// sino no es primo
+    
+    }
+  }
+   if(print_primo == true){//Si el numero es primo
+     contador_divisibles =0; //reestablecemos el contador
+     printCount(countDigit);//imprimimos en el display el valor
+   }else{
+     contador_divisibles = 0;
+   printCount(0);//si no es primo imprime 0
+   }
 }
 ~~~
 Temperatura:
@@ -240,3 +238,26 @@ lectura = analogRead(SENSOR);//Lee el sensor
 ~~~
 ## :robot: Link al proyecto
 https://www.tinkercad.com/things/j7c0aOjP5hI-copy-of-ejercicio-parcial-parte-2-joaquin-felipe-diaz-1b/editel?sharecode=vGhnIhnScdqPF_YzJPGsI2PgPvk-cZ1CiEmUkKabBHg
+
+#Proyecto Parte 3:
+
+![Tinkercad](esquemas/esquema-parcial-parte3.png)
+
+
+#Funcion del proyecto:
+Contiene un sensor de luz ambietal el cual si supera el 50% del nivel de luz total apaga el motor.
+
+~~~ C
+int sensor_luz =A1;
+int valor_de_luz;
+pinMode(sensor_luz, INPUT);//Esrablecemos el pin como entrada
+//SENSOR DE LUZ MEDIAMBIENTAL
+  int valor_de_luz = analogRead(sensor_luz);
+  luz = valor_de_luz * 0.0976;//Convertimos el valor en porcentaje
+  
+  if (luz > 50){//Si el sensor de luz supera el 50 porciento 
+  apagar_motor();//se apaga el motor
+  }
+~~~
+## :robot: Link al proyecto
+https://www.tinkercad.com/things/aO4ZST5sr3R-ejercicio-parcial-parte-3-joaquin-felipe-diaz-1b/editel?sharecode=nJ8n50Bp4RIenx40EOeiCSg0qCTSLwbvoSZi5EWmL48
