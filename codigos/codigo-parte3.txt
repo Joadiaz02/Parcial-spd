@@ -29,6 +29,9 @@ int contador_divisibles = 0;
 int botonDeslizante = digitalRead(Deslizador);
 int lectura;
 int grados;
+int sensor_luz =A1;
+int valor_de_luz;
+float luz;
 bool print_primo=false;
 void setup()
 {
@@ -51,12 +54,19 @@ void setup()
   pinMode(4, INPUT_PULLUP);//BOTON SUBIR
   pinMode(3, INPUT_PULLUP);//BOTON BAJAR
   pinMode(5, INPUT_PULLUP);//BOTON RESET
-
+  pinMode(sensor_luz, INPUT);
   Serial.begin(9600);
 }
 
 void loop()
 {
+  //SENSOR DE LUZ MEDIAMBIENTAL
+  int valor_de_luz = analogRead(sensor_luz);
+  luz = valor_de_luz * 0.0976;//Convertimos el valor en porcentaje
+  
+  if (luz > 50){//Si el sensor de luz supera el 50 porciento 
+  apagar_motor();//se apaga el motor
+  }
   //TEMPERATURA
   lectura = analogRead(SENSOR);//Lee el sensor
   grados=map(lectura,20,350,-40,125);
@@ -67,13 +77,13 @@ void loop()
   if(botonDeslizante== 0){
   int pressed = keypressed();
   if (pressed==SUBE){
-    motor_hacia_adelante();
-    countDigit++; 
+    countDigit++;
+    motor_hacia_adelante();     
     if (countDigit >99)
       countDigit =0;   
   }else if(pressed ==BAJA){//Si se presiona el boton de bajar:
   countDigit--;//El digito se le resta 1 al presionar el boton.
-    motor_hacia_atras();
+  motor_hacia_atras();
     if (countDigit <0)
       countDigit =99;
   }
@@ -121,7 +131,6 @@ void loop()
    }
 }
 }
-
 //Gira el motor hacia adelante.
 void motor_hacia_adelante(){
 digitalWrite(A2,1);
