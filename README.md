@@ -241,7 +241,7 @@ https://www.tinkercad.com/things/j7c0aOjP5hI-copy-of-ejercicio-parcial-parte-2-j
 
 #Proyecto Parte 3:
 
-![Tinkercad](esquemas/esquema-parcial-parte3.png)
+![Tinkercad](esquemas/esquema-parcial-parte3-final.png)
 
 
 #Funcion del proyecto:
@@ -260,4 +260,4 @@ pinMode(sensor_luz, INPUT);//Esrablecemos el pin como entrada
   }
 ~~~
 ## :robot: Link al proyecto
-https://www.tinkercad.com/things/aO4ZST5sr3R-ejercicio-parcial-parte-3-joaquin-felipe-diaz-1b/editel?sharecode=nJ8n50Bp4RIenx40EOeiCSg0qCTSLwbvoSZi5EWmL48
+https://www.tinkercad.com/things/cg6Gpqwhk6p-copy-of-ejercicio-parcial-parte-3-joaquin-felipe-diaz-1b/editel?sharecode=Jvbqy_SVM-zl7UaXyVOWA2JLdC8DOP1p04tR-TWt7Ek
