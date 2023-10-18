@@ -261,3 +261,22 @@ pinMode(sensor_luz, INPUT);//Esrablecemos el pin como entrada
 ~~~
 ## :robot: Link al proyecto
 https://www.tinkercad.com/things/cg6Gpqwhk6p-copy-of-ejercicio-parcial-parte-3-joaquin-felipe-diaz-1b/editel?sharecode=Jvbqy_SVM-zl7UaXyVOWA2JLdC8DOP1p04tR-TWt7Ek
+
+#Proyecto Parte 4:
+
+![Tinkercad](esquemas/esquema-parcial-parte3.png)
+
+
+#Funcion del proyecto:
+Contiene un contador de numeros multiplos de 5 que es mostrado a traves de dos displays de 7 segmentos multiplexados.
+
+Explicación de codigo:
+Tomamos el valor de la cuenta a traves de la variable countDigit la cual es modificada mediante los pulsadores. Si el numero de countDigit al dividirlo por 5 nos da de resto 0 siginifica que es multiplo de 5, al cumplirse la condicion imprimimos el valor por los displays de 7 segmentos.Si no se cumple la condicion se imprime un 0.
+~~~ C
+if (countDigit % 5 == 0){
+   printCount(countDigit);
+   }
+   if (countDigit % 5 !=0){
+   printCount(0);
+   }
+~~~ 

@@ -1,0 +1,331 @@
+Alumno: Joaquin Felipe Diaz
+DNI: 44491239
+
+// C++ code
+//
+#define A 12
+#define B 13
+#define C 7
+#define D 8
+#define E 9
+#define F 11
+#define G 10
+#define SUBE 4
+#define RESET 5
+#define BAJA 3
+#define UNIDAD A4
+#define DECENA A5
+#define APAGADOS 0
+#define timeDisplayOn 10
+#define Deslizador 2
+#define SENSOR A0
+int countDigit = 0;
+int sube = 1;
+int subePrevia = 1;
+int baja = 1;
+int bajaPrevia = 1;
+int reset = 1;
+int resetPrevia = 1;
+int i = 0;
+int numero = 0;
+int contador_divisibles = 0;
+int botonDeslizante = digitalRead(Deslizador);
+int lectura;
+int grados;
+int sensor_luz =A1;
+int valor_de_luz;
+float luz;
+bool print_primo=false;
+void setup()
+{
+  pinMode(7, OUTPUT);  //seg C
+  pinMode(8, OUTPUT);  //seg D
+  pinMode(9, OUTPUT);  //seg E
+  pinMode(10, OUTPUT);  //seg G
+  pinMode(11, OUTPUT);  //seg F
+  pinMode(12, OUTPUT);  //seg A
+  pinMode(13, OUTPUT);  //seg B
+  pinMode(A5, OUTPUT); // display izquierdo 
+  pinMode(A4, OUTPUT); // display derecho
+  pinMode(A3, OUTPUT); // El motor gira hacia atras 
+  pinMode(A2, OUTPUT); // El motor gira hacia adelante
+  pinMode(UNIDAD,OUTPUT);
+  pinMode(DECENA,OUTPUT);
+  digitalWrite(UNIDAD,0);
+  digitalWrite(DECENA,0);
+  
+  pinMode(4, INPUT_PULLUP);//BOTON SUBIR
+  pinMode(3, INPUT_PULLUP);//BOTON BAJAR
+  pinMode(5, INPUT_PULLUP);//BOTON RESET
+  pinMode(sensor_luz, INPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  //SENSOR DE LUZ MEDIAMBIENTAL
+  int valor_de_luz = analogRead(sensor_luz);
+  luz = valor_de_luz * 0.0976;//Convertimos el valor en porcentaje
+  
+  if (luz > 50){//Si el sensor de luz supera el 50 porciento 
+  apagar_motor();//se apaga el motor
+  }
+  //TEMPERATURA
+  lectura = analogRead(SENSOR);//Lee el sensor
+  grados=map(lectura,20,350,-40,125);
+  if (grados >100){  //Si los grados superan el 100
+  apagar_motor();
+  }
+  ///CONTADOR 00 A 99.
+  if(botonDeslizante== 0){
+  int pressed = keypressed();
+  if (pressed==SUBE){
+    countDigit++;
+    motor_hacia_adelante();     
+    if (countDigit >99)
+      countDigit =0;   
+  }else if(pressed ==BAJA){//Si se presiona el boton de bajar:
+  countDigit--;//El digito se le resta 1 al presionar el boton.
+  motor_hacia_atras();
+    if (countDigit <0)
+      countDigit =99;
+  }
+  else if(pressed == RESET){
+    apagar_motor();//Apaga el motor y restablece el display a 0. 
+  }
+ printCount(countDigit);
+  }
+  //TERMINA CONTADOR 00 A 99.
+  
+  //CONTADOR NUMEROS MULTIPLOS DE 5 HASTA 99.
+ if(botonDeslizante == 1){
+   int pressed = keypressed();
+  if (pressed==SUBE){
+    countDigit++;
+    motor_hacia_adelante();     
+    if (countDigit >99)
+      countDigit =0;   
+  }else if(pressed ==BAJA){//Si se presiona el boton de bajar:
+  countDigit--;//El digito se le resta 1 al presionar el boton.
+  motor_hacia_atras();
+    if (countDigit <0)
+      countDigit =99;
+  }
+  else if(pressed == RESET){
+    apagar_motor();//Apaga el motor y restablece el display a 0. 
+  }
+
+   if (countDigit % 5 == 0){
+   printCount(countDigit);
+   }
+   if (countDigit % 5 !=0){
+   printCount(0);
+   }
+ }
+}
+//Gira el motor hacia adelante.
+void motor_hacia_adelante(){
+digitalWrite(A2,1);
+digitalWrite(A3,0);
+}
+
+//Gira el motor hacia atras.
+void motor_hacia_atras(){
+digitalWrite(A3,1);//El motor gira hacia atras.
+digitalWrite(A2,0);
+}
+
+//Apaga el motor.
+void apagar_motor(){
+digitalWrite(A3,0);//Se apaga el motor.
+digitalWrite(A2,0);
+countDigit=0;//El display se queda en 0
+}
+
+//Imprime en los displays los numeros correspondientes.
+void printDigit(int digit){ 
+  digitalWrite(A, LOW);
+  digitalWrite(B, LOW);
+  digitalWrite(C, LOW);
+  digitalWrite(D, LOW);
+  digitalWrite(E, LOW);
+  digitalWrite(F, LOW);
+  digitalWrite(G, LOW);
+    switch (digit) {
+    case 1:                 //escribe en el 7seg el numero 1
+      prender_uno();
+     break;
+    case 2:                //escribe en el 7seg el numero 2
+      prender_dos();
+     break;      
+    case 3:               //escribe en el 7seg el numero 3
+       prender_tres();
+      break;
+    case 4:               //escribe en el 7seg el numero 4
+      prender_cuatro();
+     break;
+    case 5:               //escribe en el 7seg el numero 5
+      prender_cinco();
+     break;
+    case 6:               //escribe en el 7seg el numero 6
+      prender_seis();
+     break;
+    case 7:              //escribe en el 7seg el numero 7
+      prender_siete();
+     break;
+    case 8:              //escribe en el 7seg el numero 8
+      prender_ocho();
+      break;
+    case 9:               //escribe en el 7seg el numero 9
+      prender_nueve();
+     break;
+    case 0:                //escribe en el 7seg el numero 0
+       prender_cero();
+      break;
+        
+       
+      
+    }
+}
+
+
+//Enciende el display correspondiente.
+void prendeDigito(int digito){
+  if (digito == UNIDAD){
+  digitalWrite(UNIDAD, LOW);
+  digitalWrite(DECENA, HIGH);
+  delay(timeDisplayOn);
+  }
+  else if(digito == DECENA){
+  digitalWrite(UNIDAD, HIGH);
+  digitalWrite(DECENA, LOW);
+  delay(timeDisplayOn);
+  }else{
+  digitalWrite(UNIDAD, HIGH);
+  digitalWrite(DECENA, HIGH);
+  delay(timeDisplayOn);
+  }
+}
+//Indica los valores que se deben imprimir en los displays segun corresponda.
+void printCount(int count){
+ prendeDigito(APAGADOS);
+ printDigit(count/10);
+ prendeDigito(DECENA);
+ prendeDigito(APAGADOS);
+ printDigit(count - 10*((int)count/10));
+ prendeDigito(UNIDAD);
+}
+//Indica si algun boton fue presionado.   
+ int keypressed (void){
+ sube = digitalRead(SUBE);
+ baja = digitalRead(BAJA);
+ reset = digitalRead(RESET);
+   if (sube==1)
+     subePrevia = 1;
+   if (baja==1)
+     bajaPrevia =1;
+   if (reset==1)
+     resetPrevia = 1;   
+   	   if (sube == 0 && sube != subePrevia)
+        {
+         subePrevia = sube;
+         return SUBE;
+   	     }
+       if (baja == 0 && baja != bajaPrevia)
+        {
+         bajaPrevia = baja;
+         return BAJA;
+         }
+        if (reset == 0 && reset != resetPrevia)
+         {
+          resetPrevia = reset;
+          return RESET;
+          }
+   return 0;
+ }
+//FUNCIONES DE PRENDER NUMEROS. 
+
+void prender_cero(){
+  digitalWrite(A, HIGH);
+  digitalWrite(B, HIGH);
+  digitalWrite(C, HIGH);
+  digitalWrite(D, HIGH);
+  digitalWrite(E, HIGH);
+  digitalWrite(F, HIGH);
+}
+
+void prender_uno(){
+  digitalWrite(B, HIGH);
+  digitalWrite(C, HIGH);
+}
+
+void prender_dos(){
+
+  digitalWrite(A, HIGH);
+  digitalWrite(B, HIGH);
+  digitalWrite(D, HIGH);
+  digitalWrite(E, HIGH);
+  digitalWrite(G, HIGH);
+}
+
+void prender_tres(){
+
+  digitalWrite(A, HIGH);
+  digitalWrite(B, HIGH);
+  digitalWrite(C, HIGH);
+  digitalWrite(D, HIGH);
+  digitalWrite(G, HIGH);
+}
+
+void prender_cuatro(){
+
+  digitalWrite(G, HIGH);
+  digitalWrite(F, HIGH);
+  digitalWrite(B, HIGH);
+  digitalWrite(C, HIGH);
+}
+
+void prender_cinco(){
+
+  digitalWrite(A, HIGH);
+  digitalWrite(C, HIGH);
+  digitalWrite(D, HIGH);
+  digitalWrite(F, HIGH);
+  digitalWrite(G, HIGH);
+}
+
+void prender_seis(){
+
+  digitalWrite(A, HIGH);
+  digitalWrite(C, HIGH);
+  digitalWrite(D, HIGH);
+  digitalWrite(E, HIGH);
+  digitalWrite(F, HIGH);
+  digitalWrite(G, HIGH);
+}
+
+void prender_siete(){
+  digitalWrite(B, HIGH);
+  digitalWrite(C, HIGH);
+  
+  digitalWrite(A, HIGH);
+}
+
+void prender_ocho(){
+  digitalWrite(A, HIGH);
+  digitalWrite(B, HIGH);
+  digitalWrite(C, HIGH);
+  digitalWrite(D, HIGH);
+  digitalWrite(E, HIGH);
+  digitalWrite(F, HIGH);
+  digitalWrite(G, HIGH);
+}
+
+void prender_nueve(){
+  digitalWrite(A, HIGH);
+  digitalWrite(B, HIGH);
+  digitalWrite(C, HIGH);
+  digitalWrite(D, HIGH);
+  digitalWrite(F, HIGH);
+  digitalWrite(G, HIGH);
+}
